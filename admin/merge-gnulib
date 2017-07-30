@@ -29,15 +29,16 @@ GNULIB_MODULES='
   alloca-opt binary-io byteswap c-ctype c-strcase
   careadlinkat close-stream
   crypto/md5 crypto/sha1 crypto/sha256 crypto/sha512
-  diffseq dtoastr dtotimespec dup2 environ execinfo faccessat
+  diffseq dtoastr dtotimespec dup2 environ execinfo explicit_bzero faccessat
   fcntl fcntl-h fdatasync fdopendir
   filemode filevercmp flexmember fstatat fsync
   getloadavg getopt-gnu gettime gettimeofday gitlog-to-changelog
   ignore-value intprops largefile lstat
   manywarnings memrchr minmax mktime
+  manywarnings memrchr minmax mktime nstrftime
   pipe2 pselect pthread_sigmask putenv qcopy-acl readlink readlinkat
-  socklen stat-time std-gnu11 stdalign stddef stdio
-  stpcpy strftime strtoimax symlink sys_stat
+  sig2str socklen stat-time std-gnu11 stdalign stddef stdio
+  stpcpy strtoimax symlink sys_stat
   sys_time time time_r time_rz timegm timer-time timespec-add timespec-sub
   update-copyright unlocked-io utimens
   vla warnings

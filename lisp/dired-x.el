@@ -546,7 +546,9 @@ Should never be used as marker by the user or other packages.")
   (interactive)
   (let ((dired-omit-mode nil)) (revert-buffer)) ;; Show omitted files
   (dired-mark-unmarked-files (dired-omit-regexp) nil nil dired-omit-localp
-                             (dired-omit-case-fold-p dired-directory)))
+                             (dired-omit-case-fold-p (if (stringp dired-directory)
+                                                         dired-directory
+                                                       (car dired-directory)))))
 
 (defcustom dired-omit-extensions
   (append completion-ignored-extensions
@@ -591,7 +593,9 @@ This functions works by temporarily binding `dired-marker-char' to
             (let ((dired-marker-char dired-omit-marker-char))
               (when dired-omit-verbose (message "Omitting..."))
               (if (dired-mark-unmarked-files omit-re nil nil dired-omit-localp
-                                             (dired-omit-case-fold-p dired-directory))
+                                             (dired-omit-case-fold-p (if (stringp dired-directory)
+                                                                         dired-directory
+                                                                       (car dired-directory))))
                   (progn
                     (setq count (dired-do-kill-lines
 				 nil
@@ -1625,10 +1629,11 @@ Binding direction based on `dired-x-hands-off-my-keys'."
   (if (called-interactively-p 'interactive)
       (setq dired-x-hands-off-my-keys
             (not (y-or-n-p "Bind dired-x-find-file over find-file? "))))
-  (define-key (current-global-map) [remap find-file]
-    (if (not dired-x-hands-off-my-keys) 'dired-x-find-file))
-  (define-key (current-global-map) [remap find-file-other-window]
-    (if (not dired-x-hands-off-my-keys) 'dired-x-find-file-other-window)))
+  (unless dired-x-hands-off-my-keys
+    (define-key (current-global-map) [remap find-file]
+      'dired-x-find-file)
+    (define-key (current-global-map) [remap find-file-other-window]
+      'dired-x-find-file-other-window)))
 
 ;; Now call it so binding is correct.  This could go in the :initialize
 ;; slot, but then dired-x-bind-find-file has to be defined before the

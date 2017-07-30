@@ -1482,6 +1482,7 @@ FRAME."
 
 (declare-function w32-mouse-absolute-pixel-position "w32fns.c")
 (declare-function x-mouse-absolute-pixel-position "xfns.c")
+(declare-function ns-mouse-absolute-pixel-position "nsfns.c")
 
 (defun mouse-absolute-pixel-position ()
   "Return absolute position of mouse cursor in pixels.
@@ -1494,6 +1495,8 @@ position (0, 0) of the selected frame's terminal."
       (x-mouse-absolute-pixel-position))
      ((eq frame-type 'w32)
       (w32-mouse-absolute-pixel-position))
+     ((eq frame-type 'ns)
+      (ns-mouse-absolute-pixel-position))
      (t
       (cons 0 0)))))
 
@@ -2155,7 +2158,7 @@ To adjust bottom dividers for frames individually, use the frame
 parameter `bottom-divider-width'."
   :type '(restricted-sexp
           :tag "Default width of bottom dividers"
-          :match-alternatives (frame-window-divider-width-valid-p))
+          :match-alternatives (window-divider-width-valid-p))
   :initialize 'custom-initialize-default
   :set (lambda (symbol value)
 	 (set-default symbol value)
@@ -2172,7 +2175,7 @@ To adjust right dividers for frames individually, use the frame
 parameter `right-divider-width'."
   :type '(restricted-sexp
           :tag "Default width of right dividers"
-          :match-alternatives (frame-window-divider-width-valid-p))
+          :match-alternatives (window-divider-width-valid-p))
   :initialize 'custom-initialize-default
   :set (lambda (symbol value)
 	 (set-default symbol value)

@@ -35,9 +35,12 @@ along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.  */
 #include "intervals.h"
 #include "window.h"
 #include "puresize.h"
+#include "gnutls.h"
+
 
 enum equal_kind { EQUAL_NO_QUIT, EQUAL_PLAIN, EQUAL_INCLUDING_PROPERTIES };
-bool internal_equal (Lisp_Object, Lisp_Object, enum equal_kind, int, Lisp_Object);
+bool internal_equal (Lisp_Object, Lisp_Object,
+			    enum equal_kind, int, Lisp_Object);
 
 DEFUN ("identity", Fidentity, Sidentity, 1, 1, 0,
        doc: /* Return the argument unchanged.  */
@@ -3554,13 +3557,6 @@ returns nil, then (funcall TEST x1 x2) also returns nil.  */)
 void
 syms_of_fns (void)
 {
-  DEFSYM (Qmd5,    "md5");
-  DEFSYM (Qsha1,   "sha1");
-  DEFSYM (Qsha224, "sha224");
-  DEFSYM (Qsha256, "sha256");
-  DEFSYM (Qsha384, "sha384");
-  DEFSYM (Qsha512, "sha512");
-
   /* Hash table stuff.  */
   DEFSYM (Qhash_table_p, "hash-table-p");
   DEFSYM (Qeq, "eq");
@@ -3595,6 +3591,18 @@ syms_of_fns (void)
   defsubr (&Sremhash);
   defsubr (&Smaphash);
   defsubr (&Sdefine_hash_table_test);
+
+  /* Crypto and hashing stuff.  */
+  DEFSYM (Qiv_auto, "iv-auto");
+
+  DEFSYM (Qmd5,    "md5");
+  DEFSYM (Qsha1,   "sha1");
+  DEFSYM (Qsha224, "sha224");
+  DEFSYM (Qsha256, "sha256");
+  DEFSYM (Qsha384, "sha384");
+  DEFSYM (Qsha512, "sha512");
+
+  /* Miscellaneous stuff.  */
 
   DEFSYM (Qstring_lessp, "string-lessp");
   DEFSYM (Qprovide, "provide");

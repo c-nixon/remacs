@@ -2423,7 +2423,9 @@ the values of the @code{:family}, @code{:foundry}, @code{:width},
 The name of a face from which to inherit attributes, or a list of face
 names.  Attributes from inherited faces are merged into the face like
 an underlying face would be, with higher priority than underlying
-faces (@pxref{Displaying Faces}).  If a list of faces is used,
+faces (@pxref{Displaying Faces}).  If the face to inherit from is
+@code{unspecified}, it is treated the same as @code{nil}, since Emacs
+never merges @code{:inherit} attributes.  If a list of faces is used,
 attributes from faces earlier in the list override those from later
 faces.
 @end table
@@ -5305,6 +5307,17 @@ and if @code{:height} is set it will have precedence over
 wish.  @code{:max-width} and @code{:max-height} will always preserve
 the aspect ratio.
 
+If both @code{:width} and @code{:max-height} has been set (but
+@code{:height} has not been set), then @code{:max-height} will have
+precedence.  The same is the case for the opposite combination: The
+``max'' keyword has precedence.  That is, if you have a 200x100 image
+and specify that @code{:width} should be 400 and @code{:max-height}
+should be 150, you'll end up with an image that is 300x150: Preserving
+the aspect ratio and not exceeding the ``max'' setting.  This
+combination of parameters is a useful way of saying ``display this
+image as large as possible, but no larger than the available display
+area''.
+
 @item :scale @var{scale}
 This should be a number, where values higher than 1 means to increase
 the size, and lower means to decrease the size.  For instance, a value
@@ -7442,6 +7455,35 @@ displayed beginning at the left margin of the window, and are
 truncated or continued when the text reaches the right margin.
 Right-to-left paragraphs are displayed beginning at the right margin,
 and are continued or truncated at the left margin.
+
+@cindex paragraph-start, and bidirectional display
+@cindex paragraph-separate, and bidirectional display
+  Where exactly paragraphs start and end, for the purpose of the Emacs
+@acronym{UBA} implementation, is determined by the following two
+buffer-local variables (note that that @code{paragraph-start} and
+@code{paragraph-separate} have no influence on this).  By default both
+of these variables are @code{nil}, and paragraphs are bounded by empty
+lines, i.e., lines that consist entirely of zero or more whitespace
+characters followed by a newline.
+
+@defvar bidi-paragraph-start-re
+If non-@code{nil}, this variable's value should be a regular
+expression matching a line that starts or separates two paragraphs.
+The regular expression is always matched after a newline, so it is
+best to anchor it, i.e., begin it with a @code{"^"}.
+@end defvar
+
+@defvar bidi-paragraph-separate-re
+If non-@code{nil}, this variable's value should be a regular
+expression matching a line separates two paragraphs.  The regular
+expression is always matched after a newline, so it is best to anchor
+it, i.e., begin it with a @code{"^"}.
+@end defvar
+
+  If you modify any of these two variables, you should normally modify
+both, to make sure they describe paragraphs consistently.  For
+example, to have each new line start a new paragraph for
+bidi-reordering purposes, set both variables to @code{"^"}.
 
   By default, Emacs determines the base direction of each paragraph by
 looking at the text at its beginning.  The precise method of
